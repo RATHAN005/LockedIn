@@ -29,13 +29,13 @@ export default function Dashboard() {
             className="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full w-fit text-[10px] font-black uppercase tracking-widest mb-2"
           >
             <Sparkles className="w-3 h-3" />
-            <span>Today's Mission</span>
+            <span>Main Character Energy</span>
           </motion.div>
           <h1 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-foreground leading-[1.1]">
-            {summary.completionRate >= 100 ? "Champion Mode" : "Keep The Flow"}
+            {summary.completionRate >= 100 ? "Pure Slay." : "Locked In."}
           </h1>
           <p className="text-muted-foreground text-lg font-medium">
-            You've smashed <span className="text-primary font-bold">{summary.completedToday}</span> habits. {tasks.length - summary.completedToday} to go!
+            You've smashed <span className="text-primary font-bold">{summary.completedToday}</span> habits. {tasks.length - summary.completedToday} left to go. No cap.
           </p>
         </div>
         <div className="flex md:flex-col items-center md:items-end gap-3 md:gap-0">
@@ -51,7 +51,7 @@ export default function Dashboard() {
       <section className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
         <Card className="border-none glass rounded-[2.5rem] overflow-hidden group hover:scale-[1.02] transition-transform duration-500">
           <CardContent className="p-6 md:p-8">
-             <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-3">Today's Progress</p>
+             <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-3">Vibe Check</p>
              <div className="flex items-baseline gap-1 mb-3">
                 <span className="text-4xl font-black font-heading leading-none text-glow">{Math.round(summary.completionRate)}%</span>
              </div>
@@ -149,10 +149,10 @@ export default function Dashboard() {
                </div>
                <h4 className="text-blue-600 dark:text-blue-400 font-black text-[10px] uppercase tracking-widest mb-2 flex items-center gap-2">
                  <Bell className="w-3 h-3" />
-                 Smart Insight
+                 Lowkey Fact
                </h4>
                <p className="text-sm font-bold text-blue-900 dark:text-blue-100 leading-relaxed">
-                 You're 80% more likely to finish "Read 30 Pages" before 10 AM. Try it tomorrow!
+                 You're actually cracked at "Read 30 Pages" before 10 AM. It's giving productivity.
                </p>
             </Card>
           </div>
