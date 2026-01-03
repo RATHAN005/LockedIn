@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { addDays, format, subDays, isSameDay } from 'date-fns';
 
 export type TaskType = 'daily' | 'habit' | 'todo';
+export type FrequencyType = 'days' | 'weeks' | 'years';
 
 export interface Reminder {
   id: string;
@@ -21,6 +22,8 @@ export interface Task {
   color: string;
   createdAt: string;
   targetPerWeek?: number;
+  frequency: FrequencyType;
+  frequencyValue: number;
   reminders: Reminder[];
   points: number;
 }
@@ -78,6 +81,9 @@ export const useStore = create<StoreState>()(
             completedDates: [],
             streak: 0,
             points: 0,
+            frequency: task.frequency || 'days',
+            frequencyValue: task.frequencyValue || 1,
+            reminders: task.reminders || [],
             createdAt: new Date().toISOString(),
           },
         ],

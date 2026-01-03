@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { TaskType, useStore } from "@/lib/store";
+import { TaskType, useStore, FrequencyType } from "@/lib/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -37,8 +37,9 @@ const formSchema = z.object({
   description: z.string().optional(),
   type: z.enum(["daily", "habit", "todo"] as [string, ...string[]]),
   color: z.string(),
-  // We keep it as string for the form input, and convert later if needed
   targetPerWeek: z.string(),
+  frequency: z.enum(["days", "weeks", "years"]),
+  frequencyValue: z.string(),
 });
 
 interface AddTaskDialogProps {
@@ -58,6 +59,8 @@ export default function AddTaskDialog({ children }: AddTaskDialogProps) {
       type: "habit",
       color: "hsl(221, 83%, 53%)",
       targetPerWeek: "7",
+      frequency: "days",
+      frequencyValue: "1",
     },
   });
 
@@ -68,11 +71,14 @@ export default function AddTaskDialog({ children }: AddTaskDialogProps) {
       type: values.type as TaskType,
       color: values.color,
       targetPerWeek: parseInt(values.targetPerWeek, 10),
+      frequency: values.frequency as FrequencyType,
+      frequencyValue: parseInt(values.frequencyValue, 10),
+      reminders: [],
     });
     
     toast({
       title: "Habit Created",
-      description: "Your new habit has been successfully added to your list.",
+      description: `Your new habit will repeat every ${values.frequencyValue} ${values.frequency}.`,
     });
     
     setOpen(false);
@@ -95,7 +101,7 @@ export default function AddTaskDialog({ children }: AddTaskDialogProps) {
         <DialogHeader>
           <DialogTitle className="text-2xl font-heading">New Habit</DialogTitle>
           <DialogDescription>
-            Add a new habit or daily task to track your progress.
+            Configure the frequency and duration of your habit.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -107,13 +113,51 @@ export default function AddTaskDialog({ children }: AddTaskDialogProps) {
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Morning Jog" {...field} />
+                    <Input placeholder="e.g., Learn Spanish" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="frequencyValue"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Every</FormLabel>
+                    <FormControl>
+                      <Input type="number" min="1" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="frequency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Interval</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select interval" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="days">Days</SelectItem>
+                        <SelectItem value="weeks">Weeks</SelectItem>
+                        <SelectItem value="years">Years</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -128,8 +172,8 @@ export default function AddTaskDialog({ children }: AddTaskDialogProps) {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="habit">Habit (Build over time)</SelectItem>
-                        <SelectItem value="daily">Daily Task (Every day)</SelectItem>
+                        <SelectItem value="habit">Habit</SelectItem>
+                        <SelectItem value="daily">Daily Task</SelectItem>
                         <SelectItem value="todo">One-time Task</SelectItem>
                       </SelectContent>
                     </Select>
@@ -142,7 +186,7 @@ export default function AddTaskDialog({ children }: AddTaskDialogProps) {
                 name="targetPerWeek"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Weekly Target (Days)</FormLabel>
+                    <FormLabel>Goal (Days/Week)</FormLabel>
                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
@@ -151,7 +195,7 @@ export default function AddTaskDialog({ children }: AddTaskDialogProps) {
                       </FormControl>
                       <SelectContent>
                         {[1, 2, 3, 4, 5, 6, 7].map((num) => (
-                           <SelectItem key={num} value={String(num)}>{num} days/week</SelectItem>
+                           <SelectItem key={num} value={String(num)}>{num} days</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -166,7 +210,7 @@ export default function AddTaskDialog({ children }: AddTaskDialogProps) {
               name="color"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Color Code</FormLabel>
+                  <FormLabel>Theme Color</FormLabel>
                   <div className="flex gap-3 mt-2">
                     {colors.map((c) => (
                       <div
@@ -176,7 +220,6 @@ export default function AddTaskDialog({ children }: AddTaskDialogProps) {
                         }`}
                         style={{ backgroundColor: c.value }}
                         onClick={() => field.onChange(c.value)}
-                        title={c.label}
                       />
                     ))}
                   </div>
@@ -185,26 +228,8 @@ export default function AddTaskDialog({ children }: AddTaskDialogProps) {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Why do you want to build this habit?" 
-                      className="resize-none"
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
             <DialogFooter>
-              <Button type="submit" className="w-full sm:w-auto">Create Habit</Button>
+              <Button type="submit" className="w-full">Create Habit</Button>
             </DialogFooter>
           </form>
         </Form>
