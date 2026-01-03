@@ -106,32 +106,32 @@
 }
 
 .dark {
-  --background: 222 47% 4%;
+  --background: 230 25% 6%; /* Deep Obsidian */
   --foreground: 210 40% 98%;
 
-  --card: 222 47% 8%;
+  --card: 230 25% 10%; /* Slightly lighter obsidian */
   --card-foreground: 210 40% 98%;
 
-  --popover: 222 47% 8%;
+  --popover: 230 25% 10%;
   --popover-foreground: 210 40% 98%;
 
   --primary: 217.2 91.2% 59.8%;
   --primary-foreground: 222 47.4% 11.2%;
 
-  --secondary: 217.2 32.6% 12%;
+  --secondary: 230 25% 14%;
   --secondary-foreground: 210 40% 98%;
 
-  --muted: 217.2 32.6% 12%;
+  --muted: 230 25% 14%;
   --muted-foreground: 215 20.2% 65.1%;
 
-  --accent: 217.2 32.6% 12%;
+  --accent: 230 25% 18%;
   --accent-foreground: 210 40% 98%;
 
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 217.2 32.6% 14%;
-  --input: 217.2 32.6% 14%;
+  --border: 230 25% 18%;
+  --input: 230 25% 18%;
   --ring: 224.3 76.3% 48%;
 
   --chart-1: 220 70% 50%;
@@ -140,13 +140,13 @@
   --chart-4: 280 65% 60%;
   --chart-5: 340 75% 55%;
   
-  --sidebar: 240 5.9% 10%;
+  --sidebar: 230 25% 8%;
   --sidebar-foreground: 240 4.8% 95.9%;
   --sidebar-primary: 224.3 76.3% 48%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent: 230 25% 14%;
   --sidebar-accent-foreground: 240 4.8% 95.9%;
-  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-border: 230 25% 14%;
   --sidebar-ring: 217.2 91.2% 59.8%;
 }
 
@@ -162,14 +162,14 @@
   }
   
   body {
-    @apply font-sans antialiased bg-background text-foreground overflow-x-hidden;
+    @apply font-sans antialiased bg-background text-foreground overflow-x-hidden transition-colors duration-500;
     height: -webkit-fill-available;
     overscroll-behavior-y: none;
     background-image: 
-      radial-gradient(at 0% 0%, hsla(221, 83%, 53%, 0.05) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, hsla(262, 83%, 58%, 0.05) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, hsla(142, 76%, 36%, 0.05) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(24, 95%, 53%, 0.05) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, hsla(221, 83%, 53%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(262, 83%, 58%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(142, 76%, 36%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(24, 95%, 53%, 0.1) 0px, transparent 50%);
     background-attachment: fixed;
   }
   
@@ -184,11 +184,11 @@
 
 @layer utilities {
   .glass {
-    @apply bg-white/40 dark:bg-black/40 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+    @apply bg-white/40 dark:bg-white/5 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)];
   }
   
   .card-premium {
-    @apply bg-card/60 backdrop-blur-md border-2 border-white/20 dark:border-white/5 shadow-xl shadow-black/[0.02] rounded-[2.5rem] transition-all duration-500;
+    @apply bg-card/60 dark:bg-card/40 backdrop-blur-md border-2 border-white/20 dark:border-white/5 shadow-xl shadow-black/[0.02] dark:shadow-black/[0.2] rounded-[2.5rem] transition-all duration-500;
   }
 
   .mesh-gradient {
@@ -197,5 +197,9 @@
   
   .text-glow {
     text-shadow: 0 0 20px hsla(var(--primary), 0.3);
+  }
+
+  .dark .text-glow {
+    text-shadow: 0 0 25px hsla(var(--primary), 0.5);
   }
 }
