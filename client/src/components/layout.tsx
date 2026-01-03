@@ -69,7 +69,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="min-h-[100dvh] bg-background flex flex-col md:flex-row overflow-x-hidden">
+    <div className="min-h-[100dvh] bg-transparent flex flex-col md:flex-row overflow-x-hidden relative">
+      {/* Mesh Gradient Background Layer */}
+      <div className="fixed inset-0 -z-20 bg-background" />
+      <div className="fixed inset-0 -z-10 opacity-40 mix-blend-multiply dark:mix-blend-soft-light pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-primary/20 blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-purple-500/10 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+      </div>
       {/* Desktop Sidebar */}
       <aside className="hidden md:block w-80 border-r bg-card/30 backdrop-blur-2xl sticky top-0 h-screen">
         <SidebarContent />

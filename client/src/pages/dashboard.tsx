@@ -48,36 +48,36 @@ export default function Dashboard() {
       </section>
 
       {/* Stats Cards Row */}
-      <section className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
-        <Card className="border-2 border-primary/10 bg-primary/[0.02] rounded-[32px] overflow-hidden">
-          <CardContent className="p-5 md:p-6">
-             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">Progress</p>
-             <div className="flex items-baseline gap-1 mb-2">
-                <span className="text-3xl font-black font-heading leading-none">{Math.round(summary.completionRate)}%</span>
+      <section className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+        <Card className="border-none glass rounded-[2.5rem] overflow-hidden group hover:scale-[1.02] transition-transform duration-500">
+          <CardContent className="p-6 md:p-8">
+             <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-3">Today's Progress</p>
+             <div className="flex items-baseline gap-1 mb-3">
+                <span className="text-4xl font-black font-heading leading-none text-glow">{Math.round(summary.completionRate)}%</span>
              </div>
-             <Progress value={summary.completionRate} className="h-2 bg-primary/10" />
+             <Progress value={summary.completionRate} className="h-2.5 bg-primary/5" />
           </CardContent>
         </Card>
         
-        <Card className="border-2 border-emerald-500/10 bg-emerald-500/[0.02] rounded-[32px]">
-          <CardContent className="p-5 md:p-6">
-             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">Streak</p>
+        <Card className="border-none glass rounded-[2.5rem] group hover:scale-[1.02] transition-transform duration-500">
+          <CardContent className="p-6 md:p-8">
+             <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 mb-3">Current Streak</p>
              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-black font-heading leading-none">12</span>
-                <span className="text-xs font-bold text-emerald-600 uppercase tracking-tighter">Days</span>
+                <span className="text-4xl font-black font-heading leading-none text-emerald-600">12</span>
+                <span className="text-sm font-bold text-emerald-600/60 uppercase tracking-tighter">Days</span>
              </div>
-             <div className="mt-2 text-[10px] font-bold text-emerald-600/60 uppercase">Personal Best: 24d</div>
+             <div className="mt-3 text-[10px] font-black text-emerald-600/40 uppercase tracking-widest">Master Level</div>
           </CardContent>
         </Card>
 
-        <Card className="hidden md:block border-2 border-orange-500/10 bg-orange-500/[0.02] rounded-[32px]">
-           <CardContent className="p-6">
-             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">XP Earned</p>
+        <Card className="hidden md:block border-none glass rounded-[2.5rem] group hover:scale-[1.02] transition-transform duration-500">
+           <CardContent className="p-8">
+             <p className="text-[10px] font-black uppercase tracking-widest text-orange-600/60 mb-3">Total XP</p>
              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-black font-heading leading-none">850</span>
-                <span className="text-xs font-bold text-orange-600 uppercase tracking-tighter">XP</span>
+                <span className="text-4xl font-black font-heading leading-none text-orange-600">850</span>
+                <span className="text-sm font-bold text-orange-600/60 uppercase tracking-tighter">XP</span>
              </div>
-             <div className="mt-2 text-[10px] font-bold text-orange-600/60 uppercase">Level 4 Achiever</div>
+             <div className="mt-3 text-[10px] font-black text-orange-600/40 uppercase tracking-widest">Level 4 Elite</div>
           </CardContent>
         </Card>
       </section>
