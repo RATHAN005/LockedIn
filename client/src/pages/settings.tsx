@@ -8,13 +8,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export default function Settings() {
   return (
     <div className="space-y-8 pb-10 max-w-2xl mx-auto">
-      <div className="flex items-center gap-6 p-6 bg-white rounded-2xl shadow-sm border">
+      <div className="flex items-center gap-6 p-6 bg-card/60 backdrop-blur-md rounded-2xl shadow-sm border dark:border-white/10">
         <Avatar className="w-20 h-20 border-4 border-primary/10">
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>JD</AvatarFallback>
         </Avatar>
         <div>
-          <h2 className="text-2xl font-bold font-heading">John Doe</h2>
+          <h2 className="text-2xl font-bold font-heading text-foreground">John Doe</h2>
           <p className="text-muted-foreground">Premium Member • Joined Jan 2026</p>
           <div className="mt-2 flex gap-2">
             <Button size="sm" variant="outline">Edit Profile</Button>
@@ -24,7 +24,7 @@ export default function Settings() {
       </div>
 
       <div className="grid gap-6">
-        <Card>
+        <Card className="border-none glass">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <Bell className="w-5 h-5 text-primary" />
@@ -34,21 +34,21 @@ export default function Settings() {
           <CardContent className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Push Notifications</Label>
+                <Label className="text-foreground">Push Notifications</Label>
                 <p className="text-xs text-muted-foreground">Receive reminders on your device</p>
               </div>
               <Switch defaultChecked />
             </div>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Smart Reminders</Label>
+                <Label className="text-foreground">Smart Reminders</Label>
                 <p className="text-xs text-muted-foreground">Notify me if I forget a habit</p>
               </div>
               <Switch defaultChecked />
             </div>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Daily Summary</Label>
+                <Label className="text-foreground">Daily Summary</Label>
                 <p className="text-xs text-muted-foreground">Get a morning recap of your day</p>
               </div>
               <Switch />
@@ -56,7 +56,7 @@ export default function Settings() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-none glass">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <Cloud className="w-5 h-5 text-primary" />
@@ -64,20 +64,20 @@ export default function Settings() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="p-4 bg-slate-50 rounded-xl border border-dashed flex items-center justify-between">
+            <div className="p-4 bg-secondary/50 rounded-xl border border-dashed border-border flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Smartphone className="w-5 h-5 text-slate-400" />
-                <span className="text-sm font-medium">Last synced: 2 minutes ago</span>
+                <Smartphone className="w-5 h-5 text-muted-foreground" />
+                <span className="text-sm font-medium text-foreground">Last synced: 2 minutes ago</span>
               </div>
               <Button size="sm" variant="ghost">Sync Now</Button>
             </div>
             <div className="grid grid-cols-2 gap-4">
-               <Button variant="outline" className="h-20 flex flex-col gap-1">
-                 <Shield className="w-5 h-5" />
+               <Button variant="outline" className="h-20 flex flex-col gap-1 border-2">
+                 <Shield className="w-5 h-5 text-primary" />
                  <span>Backup Data</span>
                </Button>
-               <Button variant="outline" className="h-20 flex flex-col gap-1">
-                 <Cloud className="w-5 h-5" />
+               <Button variant="outline" className="h-20 flex flex-col gap-1 border-2">
+                 <Cloud className="w-5 h-5 text-primary" />
                  <span>Restore Data</span>
                </Button>
             </div>
