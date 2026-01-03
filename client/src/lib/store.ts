@@ -5,86 +5,70 @@ import { addDays, format, subDays, isSameDay } from 'date-fns';
 
 export type TaskType = 'daily' | 'habit' | 'todo';
 
+export interface Reminder {
+  id: string;
+  time: string; // HH:mm
+  enabled: boolean;
+}
+
 export interface Task {
   id: string;
   title: string;
   description?: string;
   type: TaskType;
-  completedDates: string[]; // ISO date strings
+  completedDates: string[]; 
   streak: number;
   color: string;
   createdAt: string;
-  targetPerWeek?: number; // For habits
+  targetPerWeek?: number;
+  reminders: Reminder[];
+  points: number;
 }
+
+export interface Reward {
+  id: string;
+  title: string;
+  description: string;
+  requirement: number; // points
+  unlocked: boolean;
+  icon: string;
+}
+
+const QUOTES = [
+  "Quality is not an act, it is a habit.",
+  "Your habits will determine your future.",
+  "Motivation is what gets you started. Habit is what keeps you going.",
+  "Small daily improvements over time lead to stunning results.",
+  "Success is the sum of small efforts, repeated day in and day out.",
+];
 
 interface StoreState {
   tasks: Task[];
-  addTask: (task: Omit<Task, 'id' | 'completedDates' | 'streak' | 'createdAt'>) => void;
+  points: number;
+  rewards: Reward[];
+  currentQuote: string;
+  addTask: (task: Omit<Task, 'id' | 'completedDates' | 'streak' | 'createdAt' | 'points'>) => void;
   toggleTaskCompletion: (id: string, date: Date) => void;
   deleteTask: (id: string) => void;
   editTask: (id: string, updates: Partial<Task>) => void;
-  getSummary: () => { total: number; completedToday: number; completionRate: number };
+  refreshQuote: () => void;
+  getSummary: () => { total: number; completedToday: number; completionRate: number; missedDays: number };
 }
-
-// Initial mock data
-const INITIAL_TASKS: Task[] = [
-  {
-    id: '1',
-    title: 'Morning Meditation',
-    description: '10 minutes of mindfulness before work',
-    type: 'habit',
-    completedDates: [
-      format(subDays(new Date(), 1), 'yyyy-MM-dd'),
-      format(subDays(new Date(), 2), 'yyyy-MM-dd'),
-      format(subDays(new Date(), 3), 'yyyy-MM-dd'),
-    ],
-    streak: 3,
-    color: 'hsl(var(--chart-1))',
-    createdAt: new Date().toISOString(),
-    targetPerWeek: 7,
-  },
-  {
-    id: '2',
-    title: 'Read 30 Pages',
-    description: 'Current book: Atomic Habits',
-    type: 'habit',
-    completedDates: [
-      format(subDays(new Date(), 1), 'yyyy-MM-dd'),
-    ],
-    streak: 1,
-    color: 'hsl(var(--chart-2))',
-    createdAt: new Date().toISOString(),
-    targetPerWeek: 5,
-  },
-  {
-    id: '3',
-    title: 'Gym Workout',
-    description: 'Push day routine',
-    type: 'daily',
-    completedDates: [],
-    streak: 0,
-    color: 'hsl(var(--chart-3))',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    title: 'Drink 2L Water',
-    type: 'habit',
-    completedDates: [
-        format(new Date(), 'yyyy-MM-dd'),
-    ],
-    streak: 15,
-    color: 'hsl(var(--chart-4))',
-    createdAt: new Date().toISOString(),
-    targetPerWeek: 7,
-  }
-];
 
 export const useStore = create<StoreState>()(
   persist(
     (set, get) => ({
-      tasks: INITIAL_TASKS,
+      tasks: [],
+      points: 0,
+      currentQuote: QUOTES[0],
+      rewards: [
+        { id: '1', title: 'Starter', description: 'Complete 7 days streak', requirement: 100, unlocked: false, icon: '🌱' },
+        { id: '2', title: 'Pro', description: 'Reach 500 points', requirement: 500, unlocked: false, icon: '🏆' },
+        { id: '3', title: 'Master', description: 'Complete 100 days streak', requirement: 2000, unlocked: false, icon: '👑' },
+      ],
       
+      refreshQuote: () => set({ currentQuote: QUOTES[Math.floor(Math.random() * QUOTES.length)] }),
+
       addTask: (task) => set((state) => ({
         tasks: [
           ...state.tasks,
@@ -93,6 +77,7 @@ export const useStore = create<StoreState>()(
             id: uuidv4(),
             completedDates: [],
             streak: 0,
+            points: 0,
             createdAt: new Date().toISOString(),
           },
         ],
@@ -100,53 +85,28 @@ export const useStore = create<StoreState>()(
 
       toggleTaskCompletion: (id, date) => set((state) => {
         const dateStr = format(date, 'yyyy-MM-dd');
+        const task = state.tasks.find(t => t.id === id);
+        if (!task) return state;
+
+        const isCompleted = task.completedDates.includes(dateStr);
+        const newCompletedDates = isCompleted 
+          ? task.completedDates.filter(d => d !== dateStr)
+          : [...task.completedDates, dateStr];
+
+        // Points logic
+        const pointsDiff = isCompleted ? -10 : 10;
+        const newTotalPoints = state.points + pointsDiff;
+
+        // Reward unlocking
+        const newRewards = state.rewards.map(r => ({
+          ...r,
+          unlocked: r.unlocked || newTotalPoints >= r.requirement
+        }));
+
         return {
-          tasks: state.tasks.map((task) => {
-            if (task.id !== id) return task;
-
-            const isCompleted = task.completedDates.includes(dateStr);
-            let newCompletedDates;
-            
-            if (isCompleted) {
-              newCompletedDates = task.completedDates.filter((d) => d !== dateStr);
-            } else {
-              newCompletedDates = [...task.completedDates, dateStr];
-            }
-
-            // Recalculate streak (simplified logic)
-            // In a real app, this would be more complex and handle gaps based on targetPerWeek
-            let currentStreak = 0;
-            const sortedDates = [...newCompletedDates].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-            
-            if (sortedDates.length > 0) {
-               // Check if today or yesterday is completed to keep streak alive
-               const today = format(new Date(), 'yyyy-MM-dd');
-               const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
-               
-               if (sortedDates.includes(today)) {
-                   currentStreak = 1;
-                   let checkDate = subDays(new Date(), 1);
-                   while (sortedDates.includes(format(checkDate, 'yyyy-MM-dd'))) {
-                       currentStreak++;
-                       checkDate = subDays(checkDate, 1);
-                   }
-               } else if (sortedDates.includes(yesterday)) {
-                   // Streak is active but not completed today
-                   currentStreak = 0; // Or keep previous streak? Let's just count consecutive days ending today/yesterday
-                   let checkDate = subDays(new Date(), 1);
-                   while (sortedDates.includes(format(checkDate, 'yyyy-MM-dd'))) {
-                       currentStreak++;
-                       checkDate = subDays(checkDate, 1);
-                   }
-               }
-            }
-
-            return {
-              ...task,
-              completedDates: newCompletedDates,
-              streak: currentStreak
-            };
-          }),
+          points: newTotalPoints,
+          rewards: newRewards,
+          tasks: state.tasks.map(t => t.id === id ? { ...t, completedDates: newCompletedDates } : t)
         };
       }),
 
@@ -162,15 +122,21 @@ export const useStore = create<StoreState>()(
         const tasks = get().tasks;
         const todayStr = format(new Date(), 'yyyy-MM-dd');
         const completedToday = tasks.filter(t => t.completedDates.includes(todayStr)).length;
+        
+        // Mock missed days logic
+        const missedDays = tasks.reduce((acc, t) => {
+            // Simple logic: if created more than 7 days ago and less than 3 completions
+            return acc + (t.completedDates.length < 5 ? 1 : 0);
+        }, 0);
+
         return {
           total: tasks.length,
           completedToday,
-          completionRate: tasks.length > 0 ? (completedToday / tasks.length) * 100 : 0
+          completionRate: tasks.length > 0 ? (completedToday / tasks.length) * 100 : 0,
+          missedDays
         };
       }
     }),
-    {
-      name: 'habit-flow-storage',
-    }
+    { name: 'habit-flow-storage' }
   )
 );

@@ -9,6 +9,8 @@ import Dashboard from "@/pages/dashboard";
 import Habits from "@/pages/habits";
 import Analytics from "@/pages/analytics";
 
+import Settings from "@/pages/settings";
+
 function Router() {
   return (
     <Layout>
@@ -16,6 +18,7 @@ function Router() {
         <Route path="/" component={Dashboard} />
         <Route path="/habits" component={Habits} />
         <Route path="/analytics" component={Analytics} />
+        <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

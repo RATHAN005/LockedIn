@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, CheckCircle2, BarChart3, Plus, Menu } from "lucide-react";
+import { LayoutDashboard, CheckCircle2, BarChart3, Plus, Menu, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -14,6 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/habits", label: "All Habits", icon: CheckCircle2 },
     { href: "/analytics", label: "Analytics", icon: BarChart3 },
+    { href: "/settings", label: "Settings", icon: Settings },
   ];
 
   const NavContent = () => (
