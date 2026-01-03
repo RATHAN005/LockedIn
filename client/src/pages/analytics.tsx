@@ -1,10 +1,12 @@
 import { useStore } from "@/lib/store";
 import ActivityChart from "@/components/charts/activity-chart";
+import TaskDistributionChart from "@/components/charts/distribution-chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell } from "recharts";
 
 export default function Analytics() {
   const { tasks } = useStore();
+  // ... rest of component
 
   const habitPerformance = tasks.map(task => {
     // A simplified performance metric based on streaks and completion count relative to "age" of habit
@@ -28,9 +30,10 @@ export default function Analytics() {
       <ActivityChart />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TaskDistributionChart />
         <Card className="shadow-sm border-none bg-white dark:bg-card">
           <CardHeader>
-            <CardTitle>Top Performing Habits</CardTitle>
+            <CardTitle>Streak Leaders</CardTitle>
           </CardHeader>
           <CardContent>
              <div className="h-[300px] w-full">
