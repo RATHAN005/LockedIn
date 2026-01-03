@@ -36,7 +36,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="flex flex-col h-full bg-card/50 backdrop-blur-xl">
       <div className="p-8">
         <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent font-heading">
-          HabitFlow
+          Locked-In
         </h1>
         <p className="text-sm text-muted-foreground mt-1 font-medium">Main character energy only.</p>
       </div>
@@ -97,7 +97,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <header className="md:hidden fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-xl border-b z-40 flex items-center justify-between px-6">
         <Link href="/">
-          <span className="font-bold text-xl font-heading bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">HabitFlow</span>
+          <span className="font-bold text-xl font-heading bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">Locked-In</span>
         </Link>
         <div className="flex items-center gap-2">
            <Button 
